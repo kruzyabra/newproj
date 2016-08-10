@@ -1,5 +1,7 @@
 package com.example.kruzyabra.myapplication;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +15,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.kruzyabra.myapplication.fragments.GalleryFragment;
+import com.example.kruzyabra.myapplication.fragments.ImportFragment;
+import com.example.kruzyabra.myapplication.fragments.SendFragment;
+import com.example.kruzyabra.myapplication.fragments.ShareFragment;
+import com.example.kruzyabra.myapplication.fragments.SlideshowFragment;
+import com.example.kruzyabra.myapplication.fragments.ToolsFragment;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -20,10 +29,14 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.fab) FloatingActionButton fab;
-    @BindView(R.id.drawer_layout) DrawerLayout drawer;
-    @BindView(R.id.nav_view) NavigationView navigationView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawer;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,23 +96,58 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        displayView(id);
+        return true;
+    }
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+    public void displayView(int viewId) {
+        Fragment fragment = null;
+        String title = getString(R.string.app_name);
 
-        } else if (id == R.id.nav_slideshow) {
+        switch (viewId) {
+            case R.id.nav_camera:
+                fragment = new ImportFragment();
+                title = getString(R.string.import_fragment);
+                break;
+            case R.id.nav_gallery:
+                fragment = new GalleryFragment();
+                title = getString(R.string.gallery_fragment);
+                break;
+            case R.id.nav_slideshow:
+                fragment = new SlideshowFragment();
+                title = getString(R.string.slideshow_fragment);
+                break;
+            case R.id.nav_manage:
+                fragment = new ToolsFragment();
+                title = getString(R.string.tools_fragment);
+                break;
+            case R.id.nav_share:
+                fragment = new ShareFragment();
+                title = getString(R.string.share_fragment);
+                break;
+            case R.id.nav_send:
+                fragment = new SendFragment();
+                title = getString(R.string.send_fragment);
+                break;
+            default:
+                break;
+        }
 
-        } else if (id == R.id.nav_manage) {
+        if (fragment != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.content_frame, fragment);
+            transaction.commit();
+        }
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+
+
     }
+
 }
